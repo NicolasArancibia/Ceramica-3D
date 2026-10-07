@@ -1,0 +1,87 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>Validación GLB del simulador</title>
+<style>body{font:14px system-ui;padding:20px;background:#f7f4ed}pre{white-space:pre-wrap;padding:20px;background:white}iframe{width:100%;height:650px;border:1px solid #ccc}</style>
+<h1>Validación del GLB real en navegador</h1><pre id="result">Ejecutando…</pre><iframe id="app" src="../index.html"></iframe>
+<script type="module">
+const output=document.querySelector('#result'),frame=document.querySelector('#app'),lines=[];
+function ok(value,label){if(!value)throw Error(label);lines.push('PASS · '+label);output.textContent=lines.join('\n');}
+const delay=ms=>new Promise(r=>setTimeout(r,ms));
+try{
+  const deadline=Date.now()+30000;
+  while(!frame.contentWindow.SIMULATOR_READY){if(Date.now()>deadline)throw Error('App load timeout');await delay(100);}
+  const w=frame.contentWindow,doc=w.document,api=w.SIMULATOR;
+  doc.querySelector('#tab-wall').click();
+  if(!api.APP_STATE.edit)doc.querySelector('#edit-shape').click();
+  // Exercise same public UI events used by keyboard editing.
+  doc.querySelector('#pin-1').dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowDown',shiftKey:true,bubbles:true}));
+  const polygon=JSON.stringify(api.APP_STATE.polygon);
+  doc.querySelector('[data-pattern="herringbone"]').click();
+  ok(JSON.stringify(api.APP_STATE.polygon)===polygon,'Cambiar patrón conserva el polígono');
+  const photoCanvas=document.createElement('canvas');photoCanvas.width=640;photoCanvas.height=480;
+  const context=photoCanvas.getContext('2d');context.fillStyle='#d4c9ba';context.fillRect(0,0,640,480);context.fillStyle='#81725e';context.fillRect(60,330,520,150);
+  const photoBlob=await new Promise(resolve=>photoCanvas.toBlob(resolve,'image/png'));
+  const transfer=new w.DataTransfer();transfer.items.add(new w.File([photoBlob],'foto-prueba.png',{type:'image/png'}));doc.querySelector('#photo-file').files=transfer.files;doc.querySelector('#photo-file').dispatchEvent(new w.Event('change',{bubbles:true}));
+  for(let i=0;i<100&&!api.APP_STATE.photoURL;i++)await delay(30);
+  ok(!!api.APP_STATE.photoURL&&!doc.querySelector('#photo').hidden,'Carga y decodificación de fotografía local');
+  ok(JSON.stringify(api.APP_STATE.polygon)===polygon,'Subir una foto no restablece el recorte');
+  const result=await api.getExport(),buffer=await result.blob.arrayBuffer(),view=new DataView(buffer);
+  ok(result.blob.size>0,'El Blob GLB no está vacío');
+  ok(view.getUint32(0,true)===0x46546c67,'Cabecera binaria GLB válida');
+  ok(view.getUint32(4,true)===2,'glTF versión 2');
+  const jsonLength=view.getUint32(12,true),json=JSON.parse(new TextDecoder().decode(new Uint8Array(buffer,20,jsonLength)));
+  const node=json.nodes.find(n=>n.mesh!==undefined);
+  ok(json.nodes.length===1&&json.meshes.length===1,'Solo se exporta la malla final CSG');
+  ok(!json.extensionsUsed?.includes('EXT_mesh_gpu_instancing'),'GLB estándar, sin instancias ni adaptador');
+  ok(node.extras.operation==='CSG_INTERSECTION'&&node.extras.units==='metres','Intersección física exportada en metros');
+  const primitive=json.meshes[node.mesh].primitives[0],accessor=json.accessors[primitive.attributes.POSITION],bufferView=json.bufferViews[accessor.bufferView];
+  ok(['NORMAL','TEXCOORD_0'].every(name=>json.accessors[primitive.attributes[name]]?.count===accessor.count),'Normales y UVs exportadas para cada vértice');
+  ok(!!json.materials[primitive.material].pbrMetallicRoughness,'Material PBR válido en el GLB');
+  const binaryStart=20+jsonLength+8+(bufferView.byteOffset||0)+(accessor.byteOffset||0),positions=api.mesh.geometry.attributes.position;
+  ok(accessor.count===positions.count,'Todos los vértices de la malla cortada están en el GLB');
+  for(let i=0;i<positions.count;i++)for(let j=0;j<3;j++){
+    const value=view.getFloat32(binaryStart+i*(bufferView.byteStride||12)+j*4,true);
+    if(value!==positions.array[i*3+j])throw Error('GLB vertex differs from CSG result');
+  }
+  ok(true,'Cada vértice GLB es idéntico al corte CSG visible');
+  ok(result.arURL===result.url&&result.arBlob===result.blob,'AR y descarga reciben exactamente el mismo GLB');
+  const estimate=api.estimateUnits(api.APP_STATE,api.CONFIG.formats[api.APP_STATE.format]);
+  ok(doc.querySelector('#count-value').textContent===String(estimate.total),'Presupuesto por superficie más 5%');
+  const viewer=doc.querySelector('#ar-viewer');await w.customElements.whenDefined('model-viewer');viewer.setAttribute('ar-modes','webxr quick-look');
+  await new Promise((resolve,reject)=>{const timer=setTimeout(()=>reject(Error('Model-viewer timeout')),20000);viewer.addEventListener('load',()=>{clearTimeout(timer);resolve();},{once:true});viewer.addEventListener('error',()=>reject(Error('Model-viewer load failure')),{once:true});viewer.src=result.arURL;});
+  const dimensions=viewer.getDimensions(),bounds=api.mesh.geometry.boundingBox;
+  ok(Math.abs(dimensions.x-(bounds.max.x-bounds.min.x))<1e-5&&Math.abs(dimensions.y-(bounds.max.y-bounds.min.y))<1e-5,'model-viewer carga el muro completo con sus dimensiones: '+JSON.stringify(dimensions));
+  // Real model-viewer integration: editing uses the same UI during WebXR.
+  async function until(predicate,label){const end=Date.now()+30000;while(!predicate()){if(Date.now()>end)throw Error(label);await delay(40);}}
+  doc.querySelector('#ar-button').click();
+  await until(()=>viewer.classList.contains('editor-open')&&!doc.querySelector('#ar-edit-fields').disabled,'Editor did not open');
+  ok(w.getComputedStyle(viewer).display==='block'&&viewer.loaded,'Visor visible y modelo cargado antes de activar AR');
+  ok(doc.querySelector('main').inert,'El editor aísla el foco del estudio');
+  const originalColor=api.APP_STATE.color,sourceBefore=viewer.src,originalWidth=api.APP_STATE.width;
+  const newColor=originalColor==='Marfil'?'Chocolate':'Marfil';
+  doc.querySelector('#ar-color').value=newColor;doc.querySelector('#ar-color').dispatchEvent(new w.Event('change'));
+  await until(()=>!doc.querySelector('#ar-edit-fields').disabled,'Color update timeout');
+  ok(api.APP_STATE.color===newColor&&viewer.src===sourceBefore&&viewer.loaded,'Color en vivo sin recargar ni borrar el modelo');
+  const linear=viewer.model.materials[0].pbrMetallicRoughness.baseColorFactor;
+  ok(Math.abs(linear[0]-api.mesh.material.color.r)<1e-6,'El material de model-viewer coincide con el estudio');
+  doc.querySelector('#ar-width').value='0';doc.querySelector('#ar-apply').click();
+  ok(api.APP_STATE.width===originalWidth&&viewer.src===sourceBefore,'Medida inválida conserva estado y modelo');
+  doc.querySelector('#ar-width').value='1.1';doc.querySelector('#ar-apply').click();
+  await until(()=>!doc.querySelector('#ar-edit-fields').disabled,'Geometry update timeout');
+  ok(api.APP_STATE.width===1.1&&viewer.src!==sourceBefore&&viewer.loaded,'Regeneración de geometría carga un nuevo GLB');
+  ok(JSON.stringify(api.APP_STATE.polygon)===polygon,'La edición AR conserva el contorno recortado');
+  const editedBounds=api.mesh.geometry.boundingBox;
+  ok(Math.abs(viewer.getDimensions().x-(editedBounds.max.x-editedBounds.min.x))<1e-5,'La edición conserva dimensiones físicas');
+  doc.querySelector('#ar-undo').click();await until(()=>!doc.querySelector('#ar-edit-fields').disabled,'Undo timeout');
+  ok(api.APP_STATE.width===originalWidth&&api.APP_STATE.color===newColor,'Deshacer restaura geometría y conserva el color anterior');
+  doc.querySelector('#ar-undo').click();await until(()=>!doc.querySelector('#ar-edit-fields').disabled,'Color undo timeout');
+  ok(api.APP_STATE.color===originalColor&&doc.querySelector('#ar-undo').disabled,'Deshacer restaura color y agota el historial');
+  const selection=new w.Event('beforexrselect',{cancelable:true});doc.querySelector('.ar-editor').dispatchEvent(selection);
+  ok(selection.defaultPrevented,'Tocar controles no selecciona ni mueve el objeto AR');
+  doc.querySelector('#ar-editor-close').click();
+  ok(!doc.querySelector('main').inert&&!viewer.classList.contains('editor-open'),'Cerrar restaura el estudio y su foco');
+  const finalExport=await api.getExport();
+  await new Promise((resolve,reject)=>{viewer.addEventListener('load',resolve,{once:true});viewer.addEventListener('error',reject,{once:true});viewer.src=finalExport.arURL;});
+  // Keep a visible model-viewer verification of the exported artifact.
+  viewer.style.cssText='position:fixed;inset:0;width:100%;height:100%;opacity:1;background:#eee;pointer-events:auto;z-index:100';viewer.removeAttribute('aria-hidden');viewer.setAttribute('camera-controls','');
+  output.textContent=lines.join('\n')+'\n\nTODAS LAS VALIDACIONES PASARON · '+buffer.byteLength+' bytes';
+}catch(error){output.textContent=lines.join('\n')+'\nFAIL · '+error.stack;}
+</script></html>

@@ -1,0 +1,673 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#bc3028">
+<title>Materia · Simulador de Cerámica Santiago</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<style>
+:root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#302e2b;background:#edeae4;font-synthesis:none;--red:#bc3028;--line:#39312620;--muted:#716b62}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 0 25%,#e7cabc80,transparent 45%),radial-gradient(ellipse at 95% 60%,#c4d0c680,transparent 50%),#edeae4;min-height:100vh}button,input,select{font:inherit}button,select,label.upload{cursor:pointer}button{color:inherit}button:disabled{cursor:wait;opacity:.55}button:focus-visible,select:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:3px solid #bc3028;outline-offset:4px}[hidden]{display:none!important}
+header{display:flex;align-items:center;justify-content:space-between;padding:24px 4vw;border-bottom:1px solid var(--line);gap:20px}.brand{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:850;line-height:1.05;letter-spacing:-.5px}.mark{display:grid;place-items:center;width:38px;height:38px;background:var(--red);color:white;border-radius:7px;font-size:27px}.header-note{font-size:10px;letter-spacing:2px;color:var(--muted)}.tag{font-size:10px;border:1px solid var(--line);padding:8px 11px;border-radius:30px}.tag:before{content:'●';color:#6a846b;margin-right:7px}
+main{max-width:1600px;margin:auto;padding:30px 4vw 150px}.intro{display:flex;justify-content:space-between;align-items:end;gap:22px;margin-bottom:25px}.eyebrow{color:var(--red);font-size:10px;font-weight:750;letter-spacing:2px;margin:0 0 10px}h1{font-size:clamp(30px,3.8vw,52px);letter-spacing:-2px;line-height:1.1;margin:0;font-weight:550}h1 em{font-family:Georgia,serif;font-weight:400;color:#915540}.intro>p{max-width:280px;font-size:12px;line-height:1.7;color:var(--muted);margin:0}.studio{display:grid;grid-template-columns:292px minmax(0,1fr);gap:18px;align-items:start}.glass{background:#ffffff85;border:1px solid #ffffffb8;box-shadow:0 15px 45px #564a3510;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border-radius:18px}.panel{padding:22px}.section-title{display:flex;align-items:center;gap:9px;font-size:12px;font-weight:700;margin:0 0 17px}.step{font-size:10px;color:#9a6859;border:1px solid #b3998140;border-radius:50%;width:24px;height:24px;display:grid;place-items:center}.divider{border-top:1px solid var(--line);padding-top:20px;margin-top:22px}label,.field-label{display:block;font-size:11px;font-weight:600;margin:16px 0 8px}input,select{width:100%;border:1px solid #62554526;background:#ffffff9c;border-radius:8px;padding:11px;color:#302e2b;font-size:12px}input[type=file]{position:absolute;width:1px;height:1px;opacity:0}input[type=range]{padding:0;accent-color:var(--red)}.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px}.three input{padding:10px 6px}.micro{font-size:10px;line-height:1.65;color:var(--muted);margin:10px 0}.swatches{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}.swatch{height:25px;padding:0;border:2px solid #ffffffb0;border-radius:50%;position:relative;box-shadow:0 1px 3px #0002}.swatch[aria-pressed=true]{outline:2px solid var(--red);outline-offset:3px}.swatch[aria-pressed=true]:after{content:'✓';color:white;text-shadow:0 1px 2px #000;position:absolute;inset:0;display:grid;place-items:center;font-size:13px}.label-row{display:flex;justify-content:space-between;align-items:center;margin:20px 0 12px;font-size:11px}.label-row span{color:var(--muted)}.pattern-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.pattern{background:#ffffff70;border:1px solid var(--line);border-radius:8px;padding:9px 3px;font-size:10px}.pattern span{display:block;font-size:19px;color:#8b6959;line-height:1.1;margin-bottom:5px}.pattern[aria-pressed=true]{border-color:#b95240;background:#f1ddd4;color:#893d2b}.quiet,.upload{border:1px solid var(--line);border-radius:8px;background:#ffffff80;padding:10px 12px;font-size:11px;text-align:center}.upload{display:block;margin:0;font-weight:650}.upload:focus-within{outline:3px solid var(--red);outline-offset:3px}.photo-actions{display:grid;grid-template-columns:1fr auto;gap:6px}.text-button{border:0;background:none;text-decoration:underline;text-underline-offset:3px;font-size:10px;padding:8px 0;color:var(--muted)}
+.workspace{overflow:hidden}.tabs{display:grid;grid-template-columns:repeat(3,1fr);padding:8px;gap:5px;border-bottom:1px solid var(--line)}.tab{border:0;background:none;border-radius:11px;padding:13px 4px;font-size:11px;white-space:nowrap}.tab[aria-selected=true]{background:#383d35;color:white;box-shadow:0 3px 8px #0002}.stage{position:relative;height:510px;overflow:hidden;background:radial-gradient(ellipse at 50% 35%,#f7f4ee,#dedcd2);isolation:isolate}.stage:before{content:'';position:absolute;inset:0;background-image:linear-gradient(#5c5d4210 1px,transparent 1px),linear-gradient(90deg,#5c5d4210 1px,transparent 1px);background-size:36px 36px;mask-image:linear-gradient(transparent,#0006);pointer-events:none}.stage.photo:before{display:none}#photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}#webgl{position:absolute;inset:0;z-index:1}#webgl canvas{display:block;width:100%;height:100%;touch-action:none}.stage-label{position:absolute;top:22px;left:22px;z-index:4;font-size:9px;font-weight:650;letter-spacing:1.5px;background:#f6f3ecda;backdrop-filter:blur(8px);padding:9px 12px;border-radius:7px;pointer-events:none}.view-tools{position:absolute;right:16px;top:16px;display:flex;gap:5px;z-index:6}.view-tools button{border:1px solid #fff9;background:#faf9f1de;border-radius:8px;padding:9px;font-size:10px}.stage-hint{position:absolute;bottom:17px;left:12px;right:12px;text-align:center;font-size:10px;color:#4d554c;z-index:5;pointer-events:none}.stage-hint span{background:#fcfaf2df;padding:7px 12px;border-radius:20px}.dim-label{font-size:10px;font-weight:600;background:#fffcf2f2;border:1px solid #beb3a0;border-radius:5px;padding:6px 8px;color:#474239;white-space:nowrap;box-shadow:0 3px 8px #0001;pointer-events:none}.pin{position:absolute;width:30px;height:30px;border-radius:50%;background:#bd3227;color:white;border:2px solid white;box-shadow:0 2px 10px #0005;display:grid;place-items:center;font-size:11px;font-weight:750;transform:translate(-50%,-50%);touch-action:none;cursor:grab;z-index:7}.pin:active{cursor:grabbing}#pins{position:absolute;inset:0;pointer-events:none;z-index:7}#pins .pin{pointer-events:auto}.metrics{display:grid;grid-template-columns:1fr 1fr auto;align-items:center;gap:15px;padding:20px 24px;border-top:1px solid var(--line)}.metric small{display:block;font-size:9px;letter-spacing:1.1px;color:var(--muted);margin-bottom:6px}.metric strong{font-size:22px;font-weight:500;letter-spacing:-.7px}.metric strong span{font-size:12px;color:var(--muted)}.metrics>p{font-size:10px;color:var(--muted);line-height:1.6}.footer-note{display:flex;justify-content:space-between;gap:12px;margin:15px 4px;font-size:10px;color:var(--muted);line-height:1.6}.status{font-size:11px;line-height:1.6;color:#6a5a4a;margin:15px 4px;min-height:20px}
+.ar-dock{position:fixed;bottom:0;left:0;right:0;z-index:30;display:flex;justify-content:center;align-items:center;gap:24px;padding:16px 24px calc(16px + env(safe-area-inset-bottom));border-top:1px solid #fff9;background:#f1eee5d9;backdrop-filter:blur(22px);box-shadow:0 -8px 35px #463b2110}.ar-caption{font-size:10px;color:var(--muted);line-height:1.7}.ar-caption strong{display:block;font-size:12px;color:#433c32}.ar-cta{min-height:62px;min-width:370px;display:flex;align-items:center;justify-content:center;gap:15px;border:1px solid #e98f76;border-radius:14px;background:linear-gradient(120deg,#d54431,#af201f);color:white;padding:16px 24px;font-size:14px;font-weight:750;box-shadow:0 8px 24px #b827284d;animation:ar-pulse 2.8s ease-in-out infinite}.ar-cta .ar-icon{font-size:25px;font-weight:400}.ar-cta:hover{background:#a7211e}.ar-cta:disabled{animation:none}.ar-cta small{font-size:10px;font-weight:500;opacity:.8}.ar-cta[aria-busy=true] .ar-icon{animation:spin 1.5s linear infinite}@keyframes ar-pulse{0%,100%{box-shadow:0 8px 24px #b8272850,0 0 0 0 #be322628}50%{box-shadow:0 8px 32px #b8272870,0 0 0 8px #be322600}}@keyframes spin{to{transform:rotate(360deg)}}
+/* Offscreen, not display:none: model-viewer must load before activateAR(). */
+#ar-viewer{position:fixed;width:2px;height:2px;left:-20px;bottom:0;opacity:0;pointer-events:none}dialog{max-width:460px;width:calc(100% - 32px);border:1px solid white;border-radius:20px;background:#f6f3ed;padding:26px;color:#37352d;box-shadow:0 20px 90px #0004}dialog::backdrop{background:#2229;backdrop-filter:blur(5px)}dialog h2{font-size:22px;margin:0 0 12px}dialog p{font-size:12px;line-height:1.7}dialog button{margin:6px 5px 0 0}.error-panel{position:absolute;inset:90px 20px auto;background:#fff3e7;padding:24px;border-radius:12px;z-index:10;font-size:13px;line-height:1.8}
+@media(min-width:1450px){.stage{height:590px}}@media(max-width:1000px){main{padding-left:22px;padding-right:22px}.studio{grid-template-columns:255px minmax(0,1fr)}.panel{padding:18px}.intro>p{max-width:240px}.metrics{padding:18px}.metrics>p{display:none}.metrics{grid-template-columns:1fr 1fr}.tab{font-size:10px}.header-note{display:none}}
+@media(max-width:720px){header{padding:16px 20px}.tag{font-size:9px}main{padding:24px 14px 130px}.intro{display:block;margin-bottom:22px}.intro>p{max-width:none;margin-top:12px}h1{font-size:37px}.studio{display:flex;flex-direction:column}.workspace-wrap{order:-1;width:100%}.panel{width:100%;padding:20px}.stage{height:365px}.tabs{gap:0}.tab{font-size:10px;padding:13px 2px}.metrics{padding:15px 18px}.metric strong{font-size:19px}.footer-note{font-size:9px}.ar-caption{display:none}.ar-dock{padding:12px 14px calc(12px + env(safe-area-inset-bottom))}.ar-cta{min-width:0;width:100%;font-size:13px;min-height:58px;padding:14px}.swatches{grid-template-columns:repeat(7,28px);gap:12px}.swatch{height:28px}.stage-label{top:16px;left:12px;font-size:8px;padding:8px}.view-tools{right:9px;top:12px}.dim-label{font-size:9px;padding:5px}.status{margin-bottom:10px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important}}
+#ar-viewer.editor-open{display:block;inset:0;width:100%;height:100dvh;opacity:1;pointer-events:auto;z-index:60;background:#edeae4}
+#ar-viewer[ar-status="session-started"],#ar-viewer[ar-status="object-placed"]{background:transparent}
+.ar-editor{position:absolute;bottom:0;left:0;right:0;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:#faf7f0f2;border-top:1px solid #c6b9a4;max-height:48dvh;overflow:auto;color:#302e2b;pointer-events:auto;display:none}
+.editor-open .ar-editor{display:block}.ar-editor-inner{max-width:650px;margin:auto}.ar-editor header{padding:0;border:0;gap:8px}.ar-editor h2{font-size:15px;margin:0}.ar-editor p{font-size:12px;line-height:1.5;margin:8px 0}.ar-editor fieldset{border:0;padding:0;margin:0}.ar-editor label{margin:8px 0 4px}.ar-editor select,.ar-editor input{font-size:16px;min-height:44px;padding:8px}.ar-editor button{min-height:44px}.ar-editor .ar-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 12px}.ar-editor details{margin-top:8px}.ar-editor summary{cursor:pointer;padding:10px 0;font-size:13px}.ar-editor .ar-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.ar-editor .ar-launch{background:var(--red);color:white}.ar-exit{position:absolute;top:max(16px,env(safe-area-inset-top));right:16px;background:#fff;border:1px solid #aaa;border-radius:10px;padding:12px;pointer-events:auto}
+#ar-viewer[ar-status="session-started"] .ar-preview-only,#ar-viewer[ar-status="object-placed"] .ar-preview-only{display:none}
+body.ar-editing{overflow:hidden}
+
+/* Navigation and progressive disclosure. CSS grid animates intrinsic height. */
+.panel{padding:10px 18px}.accordion-section+.accordion-section{border-top:1px solid var(--line)}
+.accordion-heading{margin:0}.accordion-toggle{display:flex;align-items:center;gap:10px;width:100%;padding:20px 0;border:0;background:none;text-align:left;font-size:13px;font-weight:700}.accordion-toggle>.ph{margin-left:auto;transition:transform .25s}.accordion-toggle[aria-expanded=true]>.ph{transform:rotate(180deg)}
+.accordion-body{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .28s ease,opacity .22s ease;visibility:hidden}.accordion-body.open{grid-template-rows:1fr;opacity:1;visibility:visible}.accordion-inner{min-height:0;overflow:hidden}.accordion-content{padding:0 2px 20px}.accordion-content>label:first-child{margin-top:0}
+.mode-bar{position:relative;z-index:15;padding:12px 16px;border-bottom:1px solid var(--line);background:#fff4}.mode-trigger{display:flex;align-items:center;gap:10px;min-height:48px;width:100%;padding:9px 13px;border:1px solid #b8b5a980;border-radius:12px;background:#ffffff90;text-align:left;box-shadow:0 2px 8px #51493208}.mode-trigger>.ph:first-child{font-size:22px;color:var(--red)}.mode-trigger .ph-caret-down{margin-left:auto}.mode-trigger span{font-size:11px;color:var(--muted)}.mode-trigger strong{display:block;font-size:13px;font-weight:650;color:#353a31;margin-top:3px}.mode-menu{position:absolute;top:calc(100% - 5px);left:16px;right:16px;padding:7px;border-radius:12px;background:#faf8f2f5;backdrop-filter:blur(20px);box-shadow:0 14px 35px #24291b35;border:1px solid white}.mode-menu button{display:flex;align-items:center;gap:10px;width:100%;min-height:44px;border:0;border-radius:8px;background:transparent;text-align:left;font-size:12px;padding:12px}.mode-menu button:hover,.mode-menu button:focus-visible{background:#e5e9df}.mode-menu button[aria-checked=true]{background:#384336;color:white}
+.view-tools{gap:7px}.view-tools button{min-height:42px;display:flex;align-items:center;justify-content:center;gap:7px}.view-tools #edit-shape{background:linear-gradient(135deg,#b8392b,#922b25);border-color:#fff7;color:#fff;box-shadow:0 4px 14px #9d302b35;font-size:12px;font-weight:700;padding:11px 15px}.view-tools #edit-shape:hover{filter:brightness(1.1)}.view-tools #edit-shape .ph{font-size:19px}.view-tools #reset-camera{width:42px;font-size:19px}.stage.editing #webgl canvas{cursor:grab}.stage.editing #webgl canvas:active{cursor:grabbing}
+#photo{inset:auto;object-fit:fill;max-width:none;pointer-events:none;transform-origin:0 0;will-change:transform}
+.stage-hint{bottom:14px}.stage-hint span{display:inline-block;max-width:100%;background:rgba(0,0,0,.7);color:white;font-weight:700;line-height:1.5;padding:10px 15px;border:1px solid #ffffff2b;border-radius:13px;backdrop-filter:blur(10px);box-shadow:0 4px 18px #0002}.stage.editing .stage-hint span{animation:hint-pulse 3s ease-in-out infinite}.stage-hint small{display:block;font-size:9px;font-weight:500;opacity:.85}.canvas-nav{position:absolute;bottom:88px;left:14px;z-index:8;display:flex;align-items:center;gap:2px;padding:4px;border:1px solid #fff9;border-radius:10px;background:#faf8efde;backdrop-filter:blur(12px);box-shadow:0 3px 12px #0001}.canvas-nav button{border:0;background:none;border-radius:6px;min-width:34px;min-height:36px;font-size:17px}.canvas-nav button:hover{background:#e1e2d8}.canvas-nav output{font-size:10px;min-width:38px;text-align:center}.ph{pointer-events:none}@keyframes hint-pulse{50%{box-shadow:0 4px 22px #0004,0 0 0 4px #ffffff22}}
+@media(max-width:720px){.panel{padding:5px 18px}.mode-bar{padding:9px}.mode-menu{left:9px;right:9px}.view-tools{top:12px;right:12px}.stage-label{top:65px;font-size:8px;padding:6px 9px}.view-tools #edit-shape{padding:9px 12px}.stage-hint span{font-size:10px;padding:9px 11px}.canvas-nav{bottom:83px;left:10px}.accordion-toggle{min-height:60px}}
+@media(prefers-reduced-motion:reduce){.accordion-body,.accordion-toggle>.ph{transition:none}.stage.editing .stage-hint span{animation:none}}
+
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/","three-bvh-csg":"https://cdn.jsdelivr.net/npm/three-bvh-csg@0.0.17/src/index.js","three-mesh-bvh":"https://cdn.jsdelivr.net/npm/three-mesh-bvh@0.9.1/src/index.js"}}</script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@4.1.0/dist/model-viewer.min.js"></script>
+</head>
+<body>
+<header><div class="brand"><span class="mark">▰</span><span>CERÁMICA<br>SANTIAGO</span></div><span class="header-note">MATERIA / ESTUDIO DE REVESTIMIENTOS</span><span class="tag">Prototipo interactivo</span></header>
+<main>
+<div class="intro"><div><p class="eyebrow">DE LA MATERIA A TU ESPACIO</p><h1>Imagina tu próximo <em>muro.</em></h1></div><p>Explora colores, compón una trama y lleva tu diseño al espacio real, a escala 1:1.</p></div>
+<div class="studio">
+<aside class="panel glass" aria-label="Configuración del revestimiento">
+<section class="accordion-section"><h2 class="accordion-heading"><button class="accordion-toggle" id="accordion-1" aria-expanded="true" aria-controls="section-1"><span class="step">01</span>La materia<i class="ph ph-caret-down" aria-hidden="true"></i></button></h2><div id="section-1" class="accordion-body open" role="region" aria-labelledby="accordion-1"><div class="accordion-inner"><div class="accordion-content">
+<div id="format-fields"><label for="format">Formato de enchape</label><select id="format"><option value="nacional">Nacional · 24 × 5,5 × 1,3 cm</option><option value="importado">Importado · 24 × 6 × 1,3 cm</option></select></div>
+<div id="brick-fields" hidden><p class="micro">Ladrillo de referencia editable. No hay dimensiones de ladrillo en los datos entregados; no representa un SKU del catálogo.</p><div class="three"><label>Ancho · m<input id="brick-x" type="number" value="0.24" min="0.05" max="0.6" step="0.001"></label><label>Alto · m<input id="brick-y" type="number" value="0.055" min="0.02" max="0.4" step="0.001"></label><label>Fondo · m<input id="brick-z" type="number" value="0.12" min="0.01" max="0.4" step="0.001"></label></div></div>
+<div class="label-row"><b>Color</b><span id="color-name">Natural</span></div><div id="swatches" class="swatches" role="group" aria-label="Catálogo de colores"></div><p class="micro">Paleta ilustrativa. Los tonos hexadecimales no equivalen a muestras físicas.</p>
+</div></div></div></section>
+<div id="wall-fields">
+<section class="accordion-section"><h2 class="accordion-heading"><button class="accordion-toggle" id="accordion-2" aria-expanded="false" aria-controls="section-2"><span class="step">02</span>La composición<i class="ph ph-caret-down" aria-hidden="true"></i></button></h2><div id="section-2" class="accordion-body" role="region" aria-labelledby="accordion-2" inert><div class="accordion-inner"><div class="accordion-content">
+<div class="two"><label>Ancho del marco · m<input id="wall-width" type="number" min="0.3" max="6" step="0.1" value="2.4"></label><label>Alto del marco · m<input id="wall-height" type="number" min="0.3" max="4" step="0.1" value="1.6"></label></div>
+<label for="joint">Cantería</label><select id="joint"><option value="0.008">8 mm</option><option value="0.010" selected>10 mm</option><option value="0.012">12 mm</option><option value="0.014">14 mm</option></select>
+<p class="field-label">Traba</p><div id="patterns" class="pattern-grid" role="group" aria-label="Traba"></div>
+</div></div></div></section>
+<section class="accordion-section"><h2 class="accordion-heading"><button class="accordion-toggle" id="accordion-3" aria-expanded="false" aria-controls="section-3"><span class="step">03</span>Tu espacio<i class="ph ph-caret-down" aria-hidden="true"></i></button></h2><div id="section-3" class="accordion-body" role="region" aria-labelledby="accordion-3" inert><div class="accordion-inner"><div class="accordion-content">
+<div class="photo-actions"><label class="upload">＋ Subir fotografía<input id="photo-file" type="file" accept="image/jpeg,image/png,image/webp" aria-label="Subir fotografía de tu muro"></label><button id="remove-photo" class="quiet" title="Quitar fotografía" aria-label="Quitar fotografía" hidden>×</button></div>
+<p class="micro">Mueve los 4 puntos para recortar. El marco tiene las medidas indicadas arriba. Las piezas se cortan físicamente a ras del contorno, incluidas las diagonales. Se mantienen las canterías.</p>
+<button id="reset-polygon" class="text-button">Restablecer contorno rectangular</button>
+<p class="micro">Montaje frontal, sin corrección automática de perspectiva. Arrastra el fondo para desplazarte; usa la rueda o dos dedos para ampliar. La foto permanece en este dispositivo.</p>
+</div></div></div></section>
+</div>
+</aside>
+<div class="workspace-wrap">
+<section class="workspace glass" aria-label="Visor 3D">
+<div class="mode-bar"><button id="mode-trigger" class="mode-trigger" aria-haspopup="menu" aria-expanded="false" aria-controls="mode-menu"><i class="ph ph-stack" aria-hidden="true"></i><span>Seleccionar Modo de Visualización<strong id="mode-current">Modo Muralla</strong></span><i class="ph ph-caret-down" aria-hidden="true"></i></button><div id="mode-menu" class="mode-menu" role="menu" aria-label="Modo de visualización" hidden><button id="tab-brick" role="menuitemradio" aria-checked="false" data-mode="brick"><i class="ph ph-cube" aria-hidden="true"></i>Ladrillo Unitario</button><button id="tab-tile" role="menuitemradio" aria-checked="false" data-mode="tile"><i class="ph ph-square" aria-hidden="true"></i>Enchape Unitario</button><button id="tab-wall" role="menuitemradio" aria-checked="true" data-mode="wall"><i class="ph ph-wall" aria-hidden="true"></i>Modo Muralla</button></div></div>
+<div id="stage" class="stage" role="region" aria-label="Lienzo del simulador" tabindex="0"><img id="photo" alt="Fotografía de fondo seleccionada" hidden><div id="webgl"></div><div class="stage-label" id="scene-label">MURO DE ENCHAPE / 1:1</div><div class="view-tools"><button id="edit-shape" aria-pressed="false"><i class="ph ph-corners-out" aria-hidden="true"></i><span>Editar contorno</span></button><button id="reset-camera" title="Reiniciar diseño y controles" aria-label="Reiniciar diseño y controles"><i class="ph ph-arrow-counter-clockwise" aria-hidden="true"></i></button></div><div id="pins" hidden></div><div id="canvas-nav" class="canvas-nav" aria-label="Navegación del lienzo" hidden><button id="zoom-out" aria-label="Alejar lienzo"><i class="ph ph-minus" aria-hidden="true"></i></button><output id="zoom-value">100%</output><button id="zoom-in" aria-label="Acercar lienzo"><i class="ph ph-plus" aria-hidden="true"></i></button><button id="fit-canvas" aria-label="Encuadrar foto y contorno" title="Encuadrar foto y contorno"><i class="ph ph-arrows-out" aria-hidden="true"></i></button></div><div class="stage-hint"><span id="hint">Arrastra para girar · Rueda o pellizca para acercar</span></div><div id="fatal" class="error-panel" hidden></div></div>
+<div class="metrics"><div class="metric"><small id="metric-label">SUPERFICIE DEL CONTORNO</small><strong id="area-value">—</strong></div><div class="metric"><small id="count-label">UNIDADES ESTIMADAS · +5% DESPUNTE</small><strong id="count-value">—</strong></div><p>Medidas reales.<br>Posibilidades infinitas.</p></div>
+</section>
+<div class="footer-note"><span>Geometrías y acabados de referencia.<br>Corte CSG real · El recorte se conserva en 3D y AR.</span><button id="download" class="text-button" disabled>↓ Descargar GLB</button></div>
+<p id="status" class="status" role="status" aria-live="polite">Cargando el estudio 3D…</p>
+</div>
+</div>
+</main>
+<div class="ar-dock"><div class="ar-caption"><strong>Del diseño a la realidad.</strong>Tu composición, en tamaño real.</div><button id="ar-button" class="ar-cta" disabled><span class="ar-icon" aria-hidden="true">⌗</span><span id="ar-label">Ver en Realidad Aumentada (1:1)</span><span aria-hidden="true">↗</span></button></div>
+<model-viewer id="ar-viewer" ar ar-modes="webxr quick-look" ar-scale="fixed" ar-placement="wall" loading="eager" reveal="auto" camera-controls alt="Revestimiento editable a escala real" aria-hidden="true" tabindex="-1">
+<button slot="ar-button" hidden></button>
+<button slot="exit-webxr-ar-button" class="ar-exit">Salir de AR</button>
+<section class="ar-editor" aria-label="Editor del modelo en AR">
+<div class="ar-editor-inner">
+<header><h2>Tu diseño · escala real</h2><button id="ar-editor-close" class="quiet ar-preview-only">Volver al estudio</button></header>
+<p id="ar-editor-status" role="status" aria-live="polite">Preparando editor…</p>
+<fieldset id="ar-edit-fields" disabled>
+<div class="ar-fields"><label>Color<select id="ar-color"></select></label><label id="ar-format-field">Formato<select id="ar-format"></select></label></div>
+<details id="ar-composition"><summary>Editar composición y medidas</summary>
+<div id="ar-wall-fields" class="ar-fields">
+<label>Traba<select id="ar-pattern"></select></label><label>Cantería<select id="ar-joint"></select></label>
+<label>Ancho del marco · m<input id="ar-width" type="number" min="0.3" max="6" step="0.1"></label>
+<label>Alto del marco · m<input id="ar-height" type="number" min="0.3" max="4" step="0.1"></label></div>
+<div id="ar-brick-fields" class="ar-fields" hidden>
+<label>Ancho · m<input id="ar-brick-x" type="number" min="0.05" max="0.6" step="0.001"></label>
+<label>Alto · m<input id="ar-brick-y" type="number" min="0.02" max="0.4" step="0.001"></label>
+<label>Fondo · m<input id="ar-brick-z" type="number" min="0.01" max="0.4" step="0.001"></label></div>
+<button id="ar-apply" class="quiet">Aplicar composición</button>
+<p>Las medidas regeneran las piezas; no las estiran. Se conserva el contorno. Después de cambiar la composición, comprueba la colocación.</p></details>
+<div class="ar-actions"><button id="ar-undo" class="quiet" disabled>Deshacer</button><button id="ar-launch" class="quiet ar-launch ar-preview-only">Abrir AR</button></div>
+</fieldset></div></section></model-viewer>
+<dialog id="ar-dialog"><h2 id="ar-title">Tu modelo está listo</h2><p id="ar-message"></p><button id="ar-retry" class="quiet">Abrir AR ahora</button><button id="dialog-download" class="quiet">Descargar GLB</button><button id="dialog-close" class="text-button">Cerrar</button></dialog>
+<noscript>Activa JavaScript para utilizar el simulador.</noscript>
+<script>
+// This bootstrap also catches CDN/module failures before the module can start.
+window.addEventListener('error',e=>{if(e.target?.tagName==='SCRIPT'){document.getElementById('status').textContent='No se pudo cargar una dependencia CDN. Comprueba tu conexión y recarga.';}},true);
+window.setTimeout(()=>{if(!window.SIMULATOR_READY){const el=document.getElementById('fatal');el.hidden=false;el.textContent='El visor está tardando en cargar. Abre el archivo mediante HTTP/HTTPS y comprueba el acceso a cdn.jsdelivr.net.';}},20000);
+</script>
+<script type="module">
+import * as THREE from 'three';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+import {GLTFExporter} from 'three/addons/exporters/GLTFExporter.js';
+import {CSS2DRenderer,CSS2DObject} from 'three/addons/renderers/CSS2DRenderer.js';
+import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
+import {Brush,Evaluator,INTERSECTION} from 'three-bvh-csg';
+
+// ================================================================
+// 1. CONFIGURATION — metres throughout, single-file / no build step.
+// Source: Manual_Enchapes-V040326_c.pdf, pages 5–6. User's supplied
+// catalogue is deliberately exposed in full for both base formats.
+// Hex values and brick reference dimensions are prototype assumptions.
+// ================================================================
+const CONFIG={
+  paths:{models:'./assets/models/',textures:'./assets/textures/',brick:'./assets/models/ladrillo.glb',nacional:'./assets/models/enchape-nacional.glb',importado:'./assets/models/enchape-importado.glb'},
+  formats:{nacional:{x:0.24,y:0.055,z:0.013},importado:{x:0.24,y:0.06,z:0.013}},
+  colors:{Arcilla:'#ce8861',Chocolate:'#655047',Envejecido:'#77604b','Gris Urbano':'#8a8880',Marfil:'#d6c9ad',Natural:'#ae593b',Siena:'#bf9476'},
+  joints:[0.008,0.010,0.012,0.014],
+  patterns:{half:'1/2 traba',threequarter:'3/4 traba',stack:'Sin traba',soldier:'Sardinel',herringbone:'Espiga'},
+  maxPieces:12000,maxPhotoBytes:20*1024*1024,storageKey:'cs-parametric-v1',
+  // TODO: REEMPLAZAR null with async (blob) => HTTPS_URL to a backend
+  // that publishes THIS generated GLB. Scene Viewer cannot read blob:.
+  // Never upload the user's photograph. URLs must permit public GET.
+  publishGLB:null
+};
+const APP_STATE={mode:'wall',format:'nacional',color:'Natural',joint:0.010,pattern:'half',width:2.4,height:1.6,brick:{x:.24,y:.055,z:.12},
+  // Clockwise SCREEN coordinates; normalized to the calibrated frame.
+  // This polygon is geometry data, never just a CSS visual mask.
+  polygon:[[0,0],[1,0],[1,1],[0,1]],edit:false,photoURL:null};
+const INITIAL_STATE=structuredClone(APP_STATE);
+const VIEW_STATE={x:0,y:0,zoom:1}; // camera only; never exported or applied to CSG geometry
+const $=id=>document.getElementById(id),number=(v,d=2)=>v.toLocaleString('es-CL',{maximumFractionDigits:d}),clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const say=text=>{$('status').textContent=text;};
+const size=()=>APP_STATE.mode==='brick'?APP_STATE.brick:CONFIG.formats[APP_STATE.format];
+
+// ================================================================
+// 2. OVERBUILD LAYOUT — never discard a brick crossing the polygon.
+// Concave simple quadrilaterals are supported; bow-ties are rejected.
+// ================================================================
+const cross=(a,b,c)=>(b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0]);
+function polygonArea(p){return Math.abs(p.reduce((s,a,i)=>{const b=p[(i+1)%p.length];return s+a[0]*b[1]-a[1]*b[0];},0))/2;}
+function onSegment(p,a,b){return Math.abs(cross(a,b,p))<1e-10&&p[0]>=Math.min(a[0],b[0])-1e-10&&p[0]<=Math.max(a[0],b[0])+1e-10&&p[1]>=Math.min(a[1],b[1])-1e-10&&p[1]<=Math.max(a[1],b[1])+1e-10;}
+function segmentsMeet(a,b,c,d){return (cross(a,b,c)*cross(a,b,d)<0&&cross(c,d,a)*cross(c,d,b)<0)||onSegment(a,c,d)||onSegment(b,c,d)||onSegment(c,a,b)||onSegment(d,a,b);}
+function validPolygon(p){return Array.isArray(p)&&p.length===4&&p.every(v=>Array.isArray(v)&&v.length===2&&v.every(n=>Number.isFinite(n)))&&polygonArea(p)>.01&&p.every((a,i)=>Math.hypot(a[0]-p[(i+1)%4][0],a[1]-p[(i+1)%4][1])>.025)&&!segmentsMeet(p[0],p[1],p[2],p[3])&&!segmentsMeet(p[1],p[2],p[3],p[0]);}
+function pointInPolygon(p,poly){
+  let inside=false;
+  for(let i=0,j=poly.length-1;i<poly.length;j=i++){
+    const a=poly[j],b=poly[i];
+    if(onSegment(p,a,b))return false; // strict boundary exclusion
+    if((a[1]>p[1])!==(b[1]>p[1])&&p[0]<(b[0]-a[0])*(p[1]-a[1])/(b[1]-a[1])+a[0])inside=!inside;
+  }
+  return inside;
+}
+function corners(cx,cy,w,h,angle){const c=Math.cos(angle),s=Math.sin(angle);return [[-w/2,-h/2],[w/2,-h/2],[w/2,h/2],[-w/2,h/2]].map(([x,y])=>[cx+x*c-y*s,cy+x*s+y*c]);}
+function wallPolygon(s){return s.polygon.map(([u,v])=>[(u-.5)*s.width,(.5-v)*s.height]);}
+function polygonBounds(poly){return {minX:Math.min(...poly.map(p=>p[0])),maxX:Math.max(...poly.map(p=>p[0])),minY:Math.min(...poly.map(p=>p[1])),maxY:Math.max(...poly.map(p=>p[1]))};}
+function estimateUnits(s,d){
+  const area=polygonArea(wallPolygon(s)),moduleArea=(d.x+s.joint)*(d.y+s.joint);
+  const base=Math.ceil(area/moduleArea-1e-10),waste=Math.ceil(base*.05-1e-10);
+  return {area,moduleArea,base,waste,total:base+waste};
+}
+function buildLayout(s,d){
+  const poly=wallPolygon(s),result=[],g=s.joint,w=d.x,h=d.y,bounds=polygonBounds(poly);
+  // Point 4 is the masonry datum, NOT the centre of the bounding box.
+  // For an axis-aligned lower-left corner these equal bounds.minX/minY.
+  // For a sloping/concave boundary, the bounding-box corner can be outside
+  // the polygon: preserve the user's actual Point 4 as the datum instead.
+  const startX=poly[3][0],startY=poly[3][1];
+  // Two full LONG brick pitches extra on ALL sides, also for sardinel
+  // and espiga. Moving Point 4 moves the datum; other points only cut it.
+  const margin=2.5*(Math.max(w,h)+g),b={minX:bounds.minX-margin,maxX:bounds.maxX+margin,minY:bounds.minY-margin,maxY:bounds.maxY+margin};
+  function add(x,y,angle){
+    const footprint=corners(x,y,w,h,angle),r=polygonBounds(footprint);
+    if(r.maxX<b.minX||r.minX>b.maxX||r.maxY<b.minY||r.minY>b.maxY)return;
+    result.push({x,y,angle,footprint});
+    if(result.length>CONFIG.maxPieces)throw Error('Reduce el tamaño del marco.');
+  }
+  if(s.pattern==='herringbone'){
+    // Exact lattice, arbitrary aspect ratio, uniform joints. After a
+    // 45-degree rotation, j indexes X and i indexes Y in world space.
+    const L=w+g,H=h+g,r=Math.SQRT1_2;
+    // Align the first rotated piece's footprint bounds with Point 4.
+    // A 45-degree brick still requires diagonal perimeter cuts; it cannot
+    // have two orthogonal edges flush with horizontal/vertical boundaries.
+    const offsetX=startX+h*r,offsetY=startY-g*r;
+    for(let row=Math.floor((b.minY-offsetY)/(Math.SQRT2*L))-2;row<=Math.ceil((b.maxY-offsetY)/(Math.SQRT2*L))+2;row++)
+    for(let col=Math.floor((b.minX-offsetX)/(Math.SQRT2*H))-2;col<=Math.ceil((b.maxX-offsetX)/(Math.SQRT2*H))+2;col++){
+      const x=row*L+col*H,y=row*L-col*H;
+      for(const [cx,cy,a] of [[x+L/2,y+H/2,Math.PI/4],[x+L+H/2,y+L/2,3*Math.PI/4]])add(offsetX+(cx-cy)*r,offsetY+(cx+cy)*r,a);
+    }
+  }else{
+    const vertical=s.pattern==='soldier',pw=vertical?h:w,ph=vertical?w:h,px=pw+g,py=ph+g;
+    // Row 0 / column 0 starts with a FULL piece, with no half-joint inset.
+    // Negative row/column indices are overmass only, removed by the CSG.
+    const fraction=s.pattern==='half'?.5:s.pattern==='threequarter'?.75:0,originX=startX+pw/2,originY=startY+ph/2;
+    for(let row=Math.floor((b.minY-originY)/py)-1;row<=Math.ceil((b.maxY-originY)/py)+1;row++){
+      const shift=((row%2+2)%2)*fraction*px;
+      for(let col=Math.floor((b.minX-originX-shift)/px)-1;col<=Math.ceil((b.maxX-originX-shift)/px)+1;col++)add(originX+col*px+shift,originY+row*py,vertical?Math.PI/2:0);
+    }
+  }
+  return result;
+}
+// CSG evaluators reuse attribute capacity. Copy ONLY their drawRange,
+// otherwise unused vertices could leak into bounds, USDZ or a GLB.
+function compactCSGGeometry(source){
+  const first=source.drawRange.start||0,available=source.index?source.index.count:source.attributes.position.count;
+  const count=Math.max(0,Math.min(source.drawRange.count,available-first)),geometry=new THREE.BufferGeometry();
+  for(const name of ['position','normal','uv']){
+    const input=source.getAttribute(name);if(!input)continue;
+    const data=new Float32Array(count*input.itemSize);
+    for(let i=0;i<count;i++){const k=source.index?source.index.getX(first+i):first+i;for(let j=0;j<input.itemSize;j++)data[i*input.itemSize+j]=input.array[k*input.itemSize+j];}
+    geometry.setAttribute(name,new THREE.BufferAttribute(data,input.itemSize));
+  }
+  // Do not trust interpolated CSG normals: reconstruct them from the actual
+  // triangles. Non-indexed cut faces remain flat, with no smoothing across edges.
+  if(count)prepareGeometryAttributes(geometry);
+  geometry.computeBoundingBox();geometry.computeBoundingSphere();return geometry;
+}
+function prepareGeometryAttributes(geometry){
+  const position=geometry.getAttribute('position');
+  if(!position||position.itemSize!==3||position.count<3||!position.array.every(Number.isFinite))throw Error('La geometría no contiene posiciones 3D válidas.');
+  const index=geometry.index,triangleVertices=index?index.count:position.count;
+  if(triangleVertices%3||index&&!index.array.every(i=>Number.isInteger(i)&&i>=0&&i<position.count))throw Error('La geometría contiene triángulos inválidos.');
+  geometry.computeVertexNormals();
+  const normal=geometry.getAttribute('normal');
+  if(!normal||normal.count!==position.count||!normal.array.every(Number.isFinite))throw Error('No se pudieron reconstruir las normales del corte.');
+  const uv=geometry.getAttribute('uv');
+  if(!uv||uv.itemSize!==2||uv.count!==position.count||!uv.array.every(Number.isFinite)){
+    // Deterministic world-plane UV fallback. Preserve valid source UVs.
+    const data=new Float32Array(position.count*2);
+    for(let i=0;i<position.count;i++){data[i*2]=position.getX(i);data[i*2+1]=position.getY(i);}
+    geometry.setAttribute('uv',new THREE.BufferAttribute(data,2));
+  }
+  geometry.computeBoundingBox();geometry.computeBoundingSphere();
+  if(!Number.isFinite(geometry.boundingSphere.radius)||geometry.boundingSphere.radius<=0)throw Error('El resultado CSG está vacío o colapsado.');
+  return geometry;
+}
+function createExportSnapshot(source){
+  // Detached Mesh only: never include cutters, scene lights or labels.
+  const snapshot=source.clone(false);snapshot.geometry=source.geometry.clone();
+  snapshot.material=source.material?.isMeshStandardMaterial?source.material.clone():new THREE.MeshStandardMaterial({color:CONFIG.colors[APP_STATE.color],roughness:.92,metalness:0});
+  try{
+    prepareGeometryAttributes(snapshot.geometry);
+    snapshot.visible=true;snapshot.material.visible=true;
+    snapshot.userData=structuredClone(source.userData);
+    source.updateWorldMatrix(true,false);snapshot.matrixAutoUpdate=false;snapshot.matrix.copy(source.matrixWorld);snapshot.updateMatrixWorld(true);
+    return snapshot;
+  }catch(error){snapshot.geometry.dispose();snapshot.material.dispose();throw error;}
+}
+function validateGLB(buffer){
+  if(!(buffer instanceof ArrayBuffer)||buffer.byteLength<20)throw Error('GLTFExporter no devolvió un GLB binario válido.');
+  const view=new DataView(buffer),length=view.getUint32(12,true);
+  if(view.getUint32(0,true)!==0x46546c67||view.getUint32(4,true)!==2||view.getUint32(8,true)!==buffer.byteLength||view.getUint32(16,true)!==0x4e4f534a||length>buffer.byteLength-20)throw Error('La cabecera del GLB exportado es inválida.');
+  const json=JSON.parse(new TextDecoder().decode(new Uint8Array(buffer,20,length)));
+  const primitive=json.meshes?.[0]?.primitives?.[0],attributes=primitive?.attributes;
+  if(json.meshes?.length!==1||json.nodes?.length!==1||!attributes||!['POSITION','NORMAL','TEXCOORD_0'].every(name=>json.accessors?.[attributes[name]]?.count>0)||!json.materials?.[primitive.material]?.pbrMetallicRoughness)throw Error('El GLB no contiene la malla, atributos o material esperados.');
+  return json;
+}
+function createCutWall(s,d,sharedMaterial){
+  const pieces=buildLayout(s,d),parts=[],transform=new THREE.Object3D();
+  let merged,cutterGeometry,wallBrush,cutterBrush,result;
+  try{
+    // STEP 1: bake each excess brick in world metres; merge into ONE mesh.
+    for(const piece of pieces){transform.position.set(piece.x,piece.y,d.z/2);transform.rotation.set(0,0,piece.angle);transform.scale.set(d.x,d.y,d.z);transform.updateMatrix();parts.push(unitBox.clone().applyMatrix4(transform.matrix));}
+    merged=mergeGeometries(parts,false);if(!merged)throw Error('No se pudo combinar el muro base.');
+    merged.clearGroups();
+    // STEP 2: closed polygon prism, extending beyond both wall faces.
+    const poly=wallPolygon(s),shape=new THREE.Shape();shape.moveTo(...poly[0]);for(const p of poly.slice(1))shape.lineTo(...p);shape.closePath();
+    const zMargin=Math.max(.05,d.z*2);
+    cutterGeometry=new THREE.ExtrudeGeometry(shape,{depth:d.z+2*zMargin,bevelEnabled:false,steps:1,curveSegments:1});cutterGeometry.translate(0,0,-zMargin);cutterGeometry.clearGroups();
+    // STEP 3: true solid boolean intersection, including side/end caps.
+    wallBrush=new Brush(merged,sharedMaterial);cutterBrush=new Brush(cutterGeometry,sharedMaterial);
+    wallBrush.updateMatrixWorld(true);cutterBrush.updateMatrixWorld(true);
+    const evaluator=new Evaluator();evaluator.useGroups=false;evaluator.attributes=['position','normal','uv'];
+    result=evaluator.evaluate(wallBrush,cutterBrush,INTERSECTION);
+    const geometry=compactCSGGeometry(result.geometry);
+    const finalMaterial=sharedMaterial?.isMeshStandardMaterial?sharedMaterial:new THREE.MeshStandardMaterial({color:CONFIG.colors[s.color],roughness:.92,metalness:0});
+    const cutMesh=new THREE.Mesh(geometry,finalMaterial);
+    cutMesh.name='Ceramica_Santiago_CSG';return {mesh:cutMesh,pieces};
+  }finally{
+    for(const g of parts)g.dispose();wallBrush?.disposeCacheData();cutterBrush?.disposeCacheData();merged?.dispose();cutterGeometry?.dispose();result?.geometry.dispose();
+  }
+}
+function persist(){try{const {photoURL,edit,...state}=APP_STATE;localStorage.setItem(CONFIG.storageKey,JSON.stringify(state));}catch{say('El diseño sigue activo; el navegador no permite guardarlo al cerrar.');}}
+function restore(){try{
+  const s=JSON.parse(localStorage.getItem(CONFIG.storageKey)||'null');if(!s)return;
+  for(const [key,allowed] of Object.entries({mode:['wall','tile','brick'],format:Object.keys(CONFIG.formats),color:Object.keys(CONFIG.colors),pattern:Object.keys(CONFIG.patterns),joint:CONFIG.joints}))if(allowed.includes(s[key]))APP_STATE[key]=s[key];
+  for(const [key,min,max] of [['width',.3,6],['height',.3,4]])if(Number.isFinite(s[key]))APP_STATE[key]=clamp(s[key],min,max);
+  if(validPolygon(s.polygon))APP_STATE.polygon=s.polygon.map(p=>[...p]);
+  for(const [k,min,max] of [['x',.05,.6],['y',.02,.4],['z',.01,.4]])if(Number.isFinite(s.brick?.[k]))APP_STATE.brick[k]=clamp(s.brick[k],min,max);
+}catch{ /* Ignore malformed or obsolete state without losing defaults. */ }}
+restore();
+
+// ================================================================
+// 3. SCENE — merged overmass intersected with a solid polygon prism.
+// ================================================================
+let renderer,labels,scene,camera,photoCamera,controls,mesh,outline,dimensionGroup,layout=[],revision=0;
+let exportCache=null,exportJob=null,arBusy=false,resizeObserver,lastStageWidth=0,lastStageHeight=0,lastGeometryKey="",cutPending=false,cutFrame=0;
+const unitBox=new THREE.BoxGeometry(1,1,1);
+const material=new THREE.MeshStandardMaterial({color:CONFIG.colors[APP_STATE.color],roughness:.92,metalness:0});
+const raycaster=new THREE.Raycaster(),wallPlane=new THREE.Plane(new THREE.Vector3(0,0,1),0);
+// TODO: CARGAR MODELOS AQUI — GLTFLoader.loadAsync(CONFIG.paths[format]).
+// Bake node transforms, merge compatible primitives, normalize to 1x1x1,
+// with the front at +Z. Replace unitBox with a CLOSED manifold geometry.
+// Keep dimensions in metres in the transforms before mergeGeometries;
+// always pass the merged geometry through createCutWall / INTERSECTION.
+// TODO: CARGAR TEXTURAS AQUI — TextureLoader.loadAsync(CONFIG.paths.textures
+// + 'natural/basecolor.jpg'); set map.colorSpace=THREE.SRGBColorSpace.
+// Reuse shared material and UVs. Boolean cut faces obtain UVs from the
+// extruded cutter; add a world-space UV mapping here for production PBR.
+
+function editing(){return APP_STATE.mode==='wall'&&APP_STATE.edit;}
+function activeCamera(){return editing()?photoCamera:camera;}
+function initialize(){
+  renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setClearColor(0,0);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.3;$('webgl').append(renderer.domElement);
+  renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();say('Se perdió el contexto gráfico. Recarga la página para restaurarlo.');$('ar-button').disabled=true;});
+  scene=new THREE.Scene();scene.add(new THREE.HemisphereLight(0xfff3dc,0x666c60,2.4));
+  const key=new THREE.DirectionalLight(0xfff1de,3.2);key.position.set(-3,5,6);scene.add(key);const fill=new THREE.DirectionalLight(0xe4edff,1.5);fill.position.set(3,1,-2);scene.add(fill);
+  camera=new THREE.PerspectiveCamera(38,1,.001,100);photoCamera=new THREE.OrthographicCamera(-2,2,2,-2,.001,100);photoCamera.position.set(0,0,10);photoCamera.lookAt(0,0,0);
+  controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=true;controls.enablePan=false;controls.minDistance=.1;controls.maxDistance=20;
+  labels=new CSS2DRenderer();Object.assign(labels.domElement.style,{position:'absolute',inset:'0',pointerEvents:'none',zIndex:'3'});$('stage').append(labels.domElement);
+  dimensionGroup=new THREE.Group();scene.add(dimensionGroup);
+  createControls();syncUI();rebuild(true);resizeObserver=new ResizeObserver(resize);resizeObserver.observe($('stage'));
+  renderer.setAnimationLoop(()=>{controls.update();renderer.render(scene,activeCamera());labels.render(scene,activeCamera());});
+  $('download').disabled=!hasGeometry();$('ar-button').disabled=!hasGeometry();$('fatal').hidden=true;window.SIMULATOR_READY=true;
+  say('Listo. Cambia la composición o edita los cuatro puntos del contorno.');
+}
+function releaseGroup(group){for(const child of [...group.children]){if(child.isCSS2DObject)child.element.remove();child.geometry?.dispose();child.material?.dispose();group.remove(child);}}
+function buildDimensions(d){
+  releaseGroup(dimensionGroup);if(APP_STATE.mode==='wall')return;
+  const {x:w,y:h,z:t}=d,offset=Math.max(w,h,t)*.17;
+  const definitions=[
+    {a:[-w/2,-h/2,t/2],b:[w/2,-h/2,t/2],off:[0,-offset,0],text:'Ancho · '+number(w*1000,1)+' mm',tick:[0,offset*.16,0]},
+    {a:[-w/2,-h/2,t/2],b:[-w/2,h/2,t/2],off:[-offset,0,0],text:'Alto · '+number(h*1000,1)+' mm',tick:[offset*.16,0,0]},
+    {a:[w/2,h/2,-t/2],b:[w/2,h/2,t/2],off:[offset*.6,offset*.8,0],text:'Profundidad · '+number(t*1000,1)+' mm',tick:[0,offset*.16,0]}
+  ];
+  for(const def of definitions){
+    const a=new THREE.Vector3(...def.a),b=new THREE.Vector3(...def.b),off=new THREE.Vector3(...def.off),p=a.clone().add(off),q=b.clone().add(off),tick=new THREE.Vector3(...def.tick);
+    const points=[a,p,b,q,p,q,p.clone().sub(tick),p.clone().add(tick),q.clone().sub(tick),q.clone().add(tick)];
+    const line=new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(points),new THREE.LineBasicMaterial({color:0x776f60,depthTest:false,transparent:true,opacity:.8}));line.renderOrder=5;dimensionGroup.add(line);
+    const el=document.createElement('div');el.className='dim-label';el.textContent=def.text;const label=new CSS2DObject(el);label.position.copy(p).lerp(q,.5).add(off.clone().multiplyScalar(.3));dimensionGroup.add(label);
+  }
+}
+function hasGeometry(){return !!mesh?.geometry.attributes.position.count&&!cutPending;}
+function rebuild(fit=false){
+  if(cutFrame){cancelAnimationFrame(cutFrame);cutFrame=0;}
+  const d=size(),key=JSON.stringify({mode:APP_STATE.mode,d,width:APP_STATE.width,height:APP_STATE.height,pattern:APP_STATE.pattern,joint:APP_STATE.joint,polygon:APP_STATE.polygon});
+  try{
+    if(key!==lastGeometryKey){
+      let next;
+      if(APP_STATE.mode==='wall'){const cut=createCutWall(APP_STATE,d,material);next=cut.mesh;layout=cut.pieces;}
+      else{next=new THREE.Mesh(unitBox.clone().scale(d.x,d.y,d.z),material);layout=[];next.geometry.computeBoundingBox();next.geometry.computeBoundingSphere();}
+      if(mesh){scene.remove(mesh);mesh.geometry.dispose();}mesh=next;scene.add(mesh);lastGeometryKey=key;
+    }
+    cutPending=false;mesh.visible=true;material.color.set(CONFIG.colors[APP_STATE.color]);
+    const estimate=APP_STATE.mode==='wall'?estimateUnits(APP_STATE,d):null;
+    mesh.name='Ceramica_Santiago_CSG';
+    mesh.userData={units:'metres',operation:APP_STATE.mode==='wall'?'CSG_INTERSECTION':'unit',mode:APP_STATE.mode,format:APP_STATE.format,color:APP_STATE.color,pattern:APP_STATE.pattern,joint:APP_STATE.joint,dimensions:{...d},polygon:APP_STATE.mode==='wall'?wallPolygon(APP_STATE):null,estimate};
+    if(outline){scene.remove(outline);outline.geometry.dispose();outline.material.dispose();}
+    outline=new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(wallPolygon(APP_STATE).map(([x,y])=>new THREE.Vector3(x,y,d.z+.001))),new THREE.LineDashedMaterial({color:0xa72e27,dashSize:.035,gapSize:.02,depthTest:false}));outline.computeLineDistances();outline.visible=editing();scene.add(outline);
+    buildDimensions(d);revision++;invalidateExport();
+    $('metric-label').textContent=APP_STATE.mode==='wall'?'SUPERFICIE DEL CONTORNO':'ANCHO × ALTO × PROFUNDIDAD';
+    $('area-value').textContent=estimate?number(estimate.area)+' m²':`${number(d.x*100,2)} × ${number(d.y*100,2)} × ${number(d.z*100,2)} cm`;
+    $('count-label').textContent=estimate?'UNIDADES ESTIMADAS · +5% DESPUNTE':'PIEZA UNITARIA';
+    $('count-value').textContent=estimate?number(estimate.total,0):'1';
+    $('count-value').title=estimate?`${estimate.base} unidades por superficie + ${estimate.waste} por despunte (5%, redondeado hacia arriba). Estimación, no optimización de cortes.`:'';
+    $('download').disabled=!hasGeometry();$('ar-button').disabled=arBusy||!hasGeometry();
+    if(fit)fitCamera();resize();persist();
+  }catch(error){
+    cutPending=true;if(mesh)mesh.visible=false;invalidateExport();$('download').disabled=true;$('ar-button').disabled=true;say('No se pudo cortar el muro: '+error.message);throw error;
+  }
+}
+function scheduleCut(){
+  // Coalesce pointer moves. Export is disabled until the latest exact
+  // boolean is committed; never export a stale/uncut preview.
+  cutPending=true;$('download').disabled=true;$('ar-button').disabled=true;
+  positionPins();if(cutFrame)cancelAnimationFrame(cutFrame);
+  cutFrame=requestAnimationFrame(()=>{cutFrame=0;try{rebuild();say('Corte CSG actualizado. Bordes y diagonales conservados en AR.');}catch{/* rebuild displays an explicit recoverable error. */}});
+}
+function fitCamera(){const d=size(),w=APP_STATE.mode==='wall'?APP_STATE.width:d.x,h=APP_STATE.mode==='wall'?APP_STATE.height:d.y,t=APP_STATE.mode==='wall'?.013:d.z;const aspect=$('stage').clientWidth/Math.max($('stage').clientHeight,1);const labelMargin=APP_STATE.mode!=='wall'&&$('stage').clientWidth<500?1.55:1;const distance=labelMargin*Math.max(h*1.7,w/aspect*1.4,t*2)/(2*Math.tan(THREE.MathUtils.degToRad(camera.fov/2)));controls.target.set(0,0,0);camera.position.set(distance*.28,distance*.2,distance*1.15);controls.update();}
+function resize(){
+  if(!renderer)return;const w=$('stage').clientWidth,h=$('stage').clientHeight;if(!w||!h)return;
+  renderer.setSize(w,h);labels.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix();
+  if(w!==lastStageWidth||h!==lastStageHeight){lastStageWidth=w;lastStageHeight=h;fitCamera();}
+  const spanY=Math.max(APP_STATE.height/.65,APP_STATE.width/(w/h)/.75),spanX=spanY*w/h;
+  Object.assign(photoCamera,{left:-spanX/2,right:spanX/2,top:spanY/2,bottom:-spanY/2});updateCanvasView();
+}
+function updateCanvasView(){
+  photoCamera.zoom=VIEW_STATE.zoom;photoCamera.position.set(VIEW_STATE.x,VIEW_STATE.y,10);photoCamera.updateProjectionMatrix();photoCamera.updateMatrixWorld(true);positionPins();positionPhoto();
+  $('zoom-value').textContent=number(VIEW_STATE.zoom*100,0)+'%';
+}
+function worldToScreen(x,y){const v=new THREE.Vector3(x,y,0).project(photoCamera);return [(v.x+1)*$('stage').clientWidth/2,(1-v.y)*$('stage').clientHeight/2];}
+function positionPins(){if(!photoCamera)return;wallPolygon(APP_STATE).forEach(([x,y],i)=>{const [sx,sy]=worldToScreen(x,y),pin=$('pin-'+i);if(pin){pin.style.left=sx+'px';pin.style.top=sy+'px';pin.setAttribute('aria-label',`Punto ${i+1}: X ${number(x,3)} m, Y ${number(y,3)} m. Usa las flechas para mover.`);}});}
+function photoBounds(){
+  const image=$('photo'),aspect=image.naturalWidth/Math.max(image.naturalHeight,1)||APP_STATE.width/APP_STATE.height;
+  const width=APP_STATE.width,height=width/aspect;
+  return {minX:-width/2,maxX:width/2,minY:-height/2,maxY:height/2};
+}
+function positionPhoto(){
+  if(!APP_STATE.photoURL)return;const b=photoBounds(),a=worldToScreen(b.minX,b.maxY),c=worldToScreen(b.maxX,b.minY);
+  Object.assign($('photo').style,{left:'0',top:'0',width:(c[0]-a[0])+'px',height:(c[1]-a[1])+'px',transform:`translate(${a[0]}px,${a[1]}px)`});
+}
+function screenToWorld(clientX,clientY){const r=$('stage').getBoundingClientRect(),ndc=new THREE.Vector2((clientX-r.left)/r.width*2-1,-(clientY-r.top)/r.height*2+1);raycaster.setFromCamera(ndc,photoCamera);return raycaster.ray.intersectPlane(wallPlane,new THREE.Vector3());}
+function screenToPolygon(clientX,clientY){const hit=screenToWorld(clientX,clientY);return hit?[hit.x/APP_STATE.width+.5,.5-hit.y/APP_STATE.height]:null;}
+function zoomCanvas(factor,clientX,clientY){
+  const r=$('stage').getBoundingClientRect();clientX??=r.left+r.width/2;clientY??=r.top+r.height/2;
+  const before=screenToWorld(clientX,clientY);VIEW_STATE.zoom=clamp(VIEW_STATE.zoom*factor,.02,40);updateCanvasView();
+  const after=screenToWorld(clientX,clientY);if(before&&after){VIEW_STATE.x+=before.x-after.x;VIEW_STATE.y+=before.y-after.y;updateCanvasView();}
+}
+function fitCanvas(){
+  const b=polygonBounds(wallPolygon(APP_STATE)),p=APP_STATE.photoURL?photoBounds():b;
+  const minX=Math.min(b.minX,p.minX),maxX=Math.max(b.maxX,p.maxX),minY=Math.min(b.minY,p.minY),maxY=Math.max(b.maxY,p.maxY);
+  VIEW_STATE.x=(minX+maxX)/2;VIEW_STATE.y=(minY+maxY)/2;
+  VIEW_STATE.zoom=clamp(Math.min((photoCamera.right-photoCamera.left)*.7/Math.max(maxX-minX,.01),(photoCamera.top-photoCamera.bottom)*.6/Math.max(maxY-minY,.01)),.02,40);updateCanvasView();
+}
+function setupCanvasNavigation(){
+  const surface=renderer.domElement,pointers=new Map();let gesture=null;
+  function metrics(){const p=[...pointers.values()];return {x:p.reduce((s,v)=>s+v.x,0)/p.length,y:p.reduce((s,v)=>s+v.y,0)/p.length,distance:p.length>1?Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y):0};}
+  function rebase(){if(!pointers.size){gesture=null;return;}const m=metrics();gesture={...m,anchor:screenToWorld(m.x,m.y),zoom:VIEW_STATE.zoom};}
+  surface.addEventListener('wheel',e=>{if(!editing())return;e.preventDefault();zoomCanvas(Math.exp(-clamp(e.deltaY*(e.deltaMode===1?16:e.deltaMode===2?300:1),-500,500)*.0015),e.clientX,e.clientY);},{passive:false});
+  surface.addEventListener('pointerdown',e=>{if(!editing()||e.button>0)return;e.preventDefault();pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});surface.setPointerCapture(e.pointerId);rebase();});
+  surface.addEventListener('pointermove',e=>{
+    if(!pointers.has(e.pointerId)||!editing())return;pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(!gesture)return;
+    const m=metrics();if(gesture.distance>0&&m.distance>0)VIEW_STATE.zoom=clamp(gesture.zoom*m.distance/gesture.distance,.02,40);
+    updateCanvasView();const hit=screenToWorld(m.x,m.y);if(hit&&gesture.anchor){VIEW_STATE.x+=gesture.anchor.x-hit.x;VIEW_STATE.y+=gesture.anchor.y-hit.y;updateCanvasView();}
+  });
+  for(const type of ['pointerup','pointercancel','lostpointercapture'])surface.addEventListener(type,e=>{pointers.delete(e.pointerId);rebase();});
+  $('zoom-in').onclick=()=>zoomCanvas(1.25);$('zoom-out').onclick=()=>zoomCanvas(1/1.25);$('fit-canvas').onclick=fitCanvas;
+  $('stage').addEventListener('keydown',e=>{if(!editing()||e.target!==$('stage'))return;if(['+','=','-','0'].includes(e.key)){e.preventDefault();if(e.key==='0')fitCanvas();else zoomCanvas(e.key==='-'?.8:1.25);}else{const delta={ArrowLeft:[-1,0],ArrowRight:[1,0],ArrowUp:[0,1],ArrowDown:[0,-1]}[e.key];if(delta){e.preventDefault();VIEW_STATE.x+=delta[0]*(photoCamera.right-photoCamera.left)/VIEW_STATE.zoom*.1;VIEW_STATE.y+=delta[1]*(photoCamera.top-photoCamera.bottom)/VIEW_STATE.zoom*.1;updateCanvasView();}}});
+}
+function movePin(i,p){if(!p)return;const poly=APP_STATE.polygon.map(v=>[...v]);poly[i]=p;if(!validPolygon(poly)){say('Mantén un contorno abierto y sin cruces entre sus lados.');return;}const b=polygonBounds(wallPolygon({...APP_STATE,polygon:poly})),d=size(),pad=5*(Math.max(d.x,d.y)+APP_STATE.joint);if((b.maxX-b.minX+pad)*(b.maxY-b.minY+pad)/((d.x+APP_STATE.joint)*(d.y+APP_STATE.joint))>CONFIG.maxPieces*.9){say('El contorno supera la capacidad de piezas del prototipo. Reduce su superficie; puedes seguir navegando por el lienzo.');return;}APP_STATE.polygon=poly;scheduleCut();}
+
+// ================================================================
+// 4. UI / PHOTO — persistent shape, pointer capture + keyboard access.
+// ================================================================
+function syncUI(){
+  document.querySelectorAll('[data-mode]').forEach(el=>{const active=el.dataset.mode===APP_STATE.mode;el.setAttribute('aria-checked',String(active));});
+  document.querySelectorAll('[data-color]').forEach(el=>el.setAttribute('aria-pressed',String(el.dataset.color===APP_STATE.color)));
+  document.querySelectorAll('[data-pattern]').forEach(el=>el.setAttribute('aria-pressed',String(el.dataset.pattern===APP_STATE.pattern)));
+  $('mode-current').textContent={brick:'Ladrillo Unitario',tile:'Enchape Unitario',wall:'Modo Muralla'}[APP_STATE.mode];$('format').value=APP_STATE.format;$('joint').value=APP_STATE.joint.toFixed(3);$('wall-width').value=APP_STATE.width;$('wall-height').value=APP_STATE.height;for(const k of ['x','y','z'])$('brick-'+k).value=APP_STATE.brick[k];
+  $('color-name').textContent=APP_STATE.color;$('format-fields').hidden=APP_STATE.mode==='brick';$('brick-fields').hidden=APP_STATE.mode!=='brick';$('wall-fields').hidden=APP_STATE.mode!=='wall';$('edit-shape').hidden=APP_STATE.mode!=='wall';
+  const edit=editing(),photo=!!APP_STATE.photoURL&&edit;$('pins').hidden=!edit;$('photo').hidden=!photo;$('stage').classList.toggle('photo',photo);$('remove-photo').hidden=!APP_STATE.photoURL;$('edit-shape').setAttribute('aria-pressed',String(edit));$('edit-shape').innerHTML=edit?'<i class="ph ph-cube" aria-hidden="true"></i><span>Ver en 3D</span>':'<i class="ph ph-corners-out" aria-hidden="true"></i><span>Editar contorno</span>';$('canvas-nav').hidden=!edit;$('stage').classList.toggle('editing',edit);
+  $('scene-label').textContent=APP_STATE.mode==='wall'?(edit?'EDICIÓN DEL CONTORNO / METROS':'MURO DE ENCHAPE / 1:1'):APP_STATE.mode==='brick'?'LADRILLO / REFERENCIA EDITABLE':'ENCHAPE / DIMENSIONES REALES';
+  $('hint').innerHTML=edit?'Arrastra los 4 puntos · El marco define la escala<small>Arrastra el fondo para moverte · Rueda o pellizca para ampliar</small>':'Arrastra para girar · Rueda o pellizca para acercar';if(controls)controls.enabled=!edit;if(outline)outline.visible=edit;
+}
+function openAccordion(id){
+  for(let n=1;n<=3;n++){const open=n===id;$('accordion-'+n).setAttribute('aria-expanded',String(open));$('section-'+n).classList.toggle('open',open);$('section-'+n).inert=!open;}
+}
+function resetStudio(){
+  const {mode,photoURL,edit}=APP_STATE;Object.assign(APP_STATE,structuredClone(INITIAL_STATE),{mode,photoURL,edit});
+  Object.assign(VIEW_STATE,{x:0,y:0,zoom:1});openAccordion(1);syncUI();rebuild(true);say('Diseño reiniciado: contorno rectangular, valores iniciales y solo La materia abierta. Tu foto se conserva.');
+}
+function setupDisclosure(){
+  for(let n=1;n<=3;n++)$('accordion-'+n).onclick=()=>openAccordion($('accordion-'+n).getAttribute('aria-expanded')==='true'?0:n);
+  const trigger=$('mode-trigger'),menu=$('mode-menu'),items=[...menu.querySelectorAll('[data-mode]')];
+  function close(focus=false){menu.hidden=true;trigger.setAttribute('aria-expanded','false');if(focus)trigger.focus();}
+  function open(){menu.hidden=false;trigger.setAttribute('aria-expanded','true');items.find(el=>el.dataset.mode===APP_STATE.mode).focus();}
+  trigger.onclick=()=>menu.hidden?open():close();trigger.onkeydown=e=>{if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();open();}};
+  items.forEach((el,index)=>{el.onclick=()=>{APP_STATE.mode=el.dataset.mode;close(true);if(APP_STATE.mode!=='wall')openAccordion(1);syncUI();rebuild(true);};el.onkeydown=e=>{let next;if(e.key==='ArrowDown')next=(index+1)%3;else if(e.key==='ArrowUp')next=(index+2)%3;else if(e.key==='Home')next=0;else if(e.key==='End')next=2;else if(e.key==='Escape'){e.preventDefault();close(true);return;}else if(e.key==='Tab'){close();return;}else return;e.preventDefault();items[next].focus();};});
+  document.addEventListener('pointerdown',e=>{if(!trigger.contains(e.target)&&!menu.contains(e.target))close();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!menu.hidden)close(true);});
+}
+function createControls(){
+  setupAREditor();setupCanvasNavigation();setupDisclosure();
+  for(const [name,color] of Object.entries(CONFIG.colors)){const b=document.createElement('button');b.className='swatch';b.style.background=color;b.dataset.color=name;b.title=name;b.setAttribute('aria-label',name);b.onclick=()=>{APP_STATE.color=name;syncUI();rebuild();};$('swatches').append(b);}
+  const icons={half:'▰ ▰',threequarter:'▰ ▱',stack:'▤',soldier:'▥',herringbone:'⋰⋱'};
+  for(const [name,label] of Object.entries(CONFIG.patterns)){const b=document.createElement('button');b.className='pattern';b.dataset.pattern=name;b.innerHTML='<span aria-hidden="true">'+icons[name]+'</span>'+label;b.onclick=()=>{APP_STATE.pattern=name;syncUI();rebuild();};$('patterns').append(b);}
+  for(const id of ['format','joint'])$(id).onchange=e=>{APP_STATE[id]=id==='joint'?Number(e.target.value):e.target.value;rebuild(true);};
+  for(const [id,key,min,max] of [['wall-width','width',.3,6],['wall-height','height',.3,4]])$(id).onchange=e=>{const n=Number(e.target.value);if(!Number.isFinite(n)||n<min||n>max){e.target.value=APP_STATE[key];say(`Ingresa un valor entre ${min} y ${max} metros.`);return;}APP_STATE[key]=n;rebuild(true);};
+  for(const [k,min,max] of [['x',.05,.6],['y',.02,.4],['z',.01,.4]])$('brick-'+k).onchange=e=>{const n=Number(e.target.value);if(!Number.isFinite(n)||n<min||n>max){e.target.value=APP_STATE.brick[k];return;}APP_STATE.brick[k]=n;rebuild(true);};
+  $('edit-shape').onclick=()=>{APP_STATE.edit=!APP_STATE.edit;syncUI();resize();};$('reset-camera').onclick=resetStudio;
+  $('reset-polygon').onclick=()=>{APP_STATE.polygon=structuredClone(INITIAL_STATE.polygon);rebuild();fitCanvas();say('Contorno rectangular restablecido.');};
+  for(let i=0;i<4;i++){
+    const pin=document.createElement('div');pin.className='pin';pin.id='pin-'+i;pin.tabIndex=0;pin.setAttribute('role','button');pin.textContent=i+1;let pointer=null;
+    pin.onpointerdown=e=>{e.preventDefault();pointer=e.pointerId;pin.setPointerCapture(pointer);pin.focus();};
+    pin.onpointermove=e=>{if(pointer===e.pointerId)movePin(i,screenToPolygon(e.clientX,e.clientY));};
+    pin.onpointerup=pin.onpointercancel=()=>{pointer=null;};pin.onlostpointercapture=()=>{pointer=null;};
+    pin.onkeydown=e=>{const delta={ArrowLeft:[-1,0],ArrowRight:[1,0],ArrowUp:[0,-1],ArrowDown:[0,1]}[e.key];if(!delta)return;e.preventDefault();const step=e.shiftKey?.025:.005;movePin(i,APP_STATE.polygon[i].map((v,j)=>v+delta[j]*step));};$('pins').append(pin);
+  }
+  let uploadVersion=0;
+  $('photo-file').onchange=async e=>{const file=e.target.files?.[0];e.target.value='';if(!file)return;const version=++uploadVersion;if(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>CONFIG.maxPhotoBytes){say('Selecciona una imagen JPG, PNG o WebP de hasta 20 MB.');return;}const url=URL.createObjectURL(file);try{const probe=new Image();probe.src=url;await probe.decode();if(version!==uploadVersion){URL.revokeObjectURL(url);return;}if(APP_STATE.photoURL)URL.revokeObjectURL(APP_STATE.photoURL);APP_STATE.photoURL=url;$('photo').src=url;await $('photo').decode();APP_STATE.edit=true;syncUI();resize();fitCanvas();say('Foto cargada. Ajusta el contorno y las dimensiones del marco.');}catch{URL.revokeObjectURL(url);say('No se pudo abrir la imagen. Prueba otro archivo.');}};
+  $('remove-photo').onclick=()=>{uploadVersion++;if(APP_STATE.photoURL)URL.revokeObjectURL(APP_STATE.photoURL);APP_STATE.photoURL=null;$('photo').removeAttribute('src');syncUI();};
+  $('download').onclick=()=>download().catch(e=>say('No se pudo exportar: '+e.message));$('dialog-download').onclick=$('download').onclick;
+  $('ar-button').onclick=startAR;$('dialog-close').onclick=()=>$('ar-dialog').close();$('ar-retry').onclick=()=>{if(!exportCache||exportCache.revision!==revision){$('ar-dialog').close();startAR();return;}$('ar-dialog').close();$('ar-viewer').activateAR().catch(()=>showARHelp('El navegador no permitió abrir AR. Comprueba los permisos de cámara y la compatibilidad del dispositivo.'));};
+  $('ar-viewer').addEventListener('ar-status',e=>{if(e.detail.status==='session-started')say('Sesión AR editable iniciada a escala 1:1.');});
+}
+
+// ================================================================
+// 5. EXPORT / AR — export ONLY the resulting, physically cut CSG Mesh.
+// No photograph, outline, labels, lights or unfiltered wall are exported.
+// ================================================================
+// Keep the currently displayed asset alive until the editor closes. Clearing
+// src during an immersive session would remove the placed model.
+const retiredARURLs=new Set();
+let arEditorOpen=false,arSessionActive=false,arEditBusy=false,arWebXR=false;
+const arHistory=[];
+function invalidateExport(){
+  if(exportCache){for(const url of [exportCache.url,exportCache.arURL,exportCache.iosURL])if(url){if(arEditorOpen)retiredARURLs.add(url);else URL.revokeObjectURL(url);}exportCache=null;}
+  if(!arEditorOpen){$('ar-viewer').removeAttribute('src');$('ar-viewer').removeAttribute('ios-src');}
+}
+function releaseRetiredARURLs(){
+  const current=$('ar-viewer').src,ios=$('ar-viewer').getAttribute('ios-src');
+  for(const url of retiredARURLs)if(url!==current&&url!==ios){URL.revokeObjectURL(url);retiredARURLs.delete(url);}
+}
+function arSnapshot(){const {photoURL,edit,...state}=APP_STATE;return structuredClone(state);}
+function arMessage(message){$('ar-editor-status').textContent=message;}
+function syncAREditor(){
+  $('ar-color').value=APP_STATE.color;$('ar-format').value=APP_STATE.format;
+  $('ar-pattern').value=APP_STATE.pattern;$('ar-joint').value=String(APP_STATE.joint);
+  $('ar-width').value=APP_STATE.width;$('ar-height').value=APP_STATE.height;
+  for(const k of ['x','y','z'])$('ar-brick-'+k).value=APP_STATE.brick[k];
+  $('ar-format-field').hidden=APP_STATE.mode==='brick';$('ar-wall-fields').hidden=APP_STATE.mode!=='wall';
+  $('ar-brick-fields').hidden=APP_STATE.mode!=='brick';$('ar-composition').hidden=APP_STATE.mode==='tile';
+  $('ar-undo').disabled=!arHistory.length;$('ar-edit-fields').disabled=arEditBusy||arBusy;
+  $('ar-editor-close').disabled=arEditBusy||arBusy;$('ar-launch').disabled=!$('ar-viewer').canActivateAR;
+}
+function validateAREdit(next){
+  if(!Object.hasOwn(CONFIG.colors,next.color)||!Object.hasOwn(CONFIG.formats,next.format)||!Object.hasOwn(CONFIG.patterns,next.pattern)||!CONFIG.joints.includes(next.joint))throw Error('Selecciona una opción válida del catálogo.');
+  for(const [value,min,max] of [[next.width,.3,6],[next.height,.3,4],[next.brick.x,.05,.6],[next.brick.y,.02,.4],[next.brick.z,.01,.4]])if(!Number.isFinite(value)||value<min||value>max)throw Error('Revisa las medidas: deben estar dentro de los límites indicados.');
+  if(!validPolygon(next.polygon))throw Error('El contorno no es válido.');
+
+}
+async function applyAREdit(next,undo=false){
+  if(arEditBusy||arBusy)return false;
+  const previous=arSnapshot(),oldSource=$('ar-viewer').src;
+  try{validateAREdit(next);}catch(e){arMessage(e.message);return false;}
+  if(JSON.stringify(previous)===JSON.stringify(next))return true;
+  arEditBusy=true;syncAREditor();arMessage('Actualizando tu diseño…');
+  try{
+    const colorOnly=JSON.stringify({...previous,color:next.color})===JSON.stringify(next);
+    Object.assign(APP_STATE,structuredClone(next));rebuild();syncUI();
+    const viewer=$('ar-viewer');
+    if(colorOnly&&viewer.model){
+      // Use linear factors, matching THREE.Color / the GLB exporter.
+      const color=new THREE.Color(CONFIG.colors[next.color]);
+      for(const mat of viewer.model.materials)mat.pbrMetallicRoughness.setBaseColorFactor([color.r,color.g,color.b,1]);
+    }else{const result=await getExport();await loadARSource(viewer,result.arURL);}
+    // An explicit USDZ would otherwise show the version before this edit.
+    viewer.removeAttribute('ios-src');
+    if(undo)arHistory.pop();else{arHistory.push(previous);if(arHistory.length>20)arHistory.shift();}
+    releaseRetiredARURLs();arMessage(colorOnly?'Color actualizado. El cambio se conserva en el estudio.':'Composición cortada actualizada. Comprueba su colocación.');
+    return true;
+  }catch(e){
+    Object.assign(APP_STATE,previous);rebuild();syncUI();
+    try{await loadARSource($('ar-viewer'),oldSource);const color=new THREE.Color(CONFIG.colors[previous.color]);for(const mat of $('ar-viewer').model?.materials||[])mat.pbrMetallicRoughness.setBaseColorFactor([color.r,color.g,color.b,1]);}catch{ /* Next launch rebuilds from the restored state. */ }
+    arMessage('No se aplicó el cambio: '+e.message);return false;
+  }finally{arEditBusy=false;syncAREditor();}
+}
+function setupAREditor(){
+  const options=(id,entries)=>{for(const [value,label] of entries)$(id).add(new Option(label,value));};
+  options('ar-color',Object.keys(CONFIG.colors).map(k=>[k,k]));
+  options('ar-format',[['nacional','Nacional · 24 × 5,5 cm'],['importado','Importado · 24 × 6 cm']]);
+  options('ar-pattern',Object.entries(CONFIG.patterns));options('ar-joint',CONFIG.joints.map(n=>[String(n),number(n*1000,0)+' mm']));
+  $('ar-color').onchange=()=>applyAREdit({...arSnapshot(),color:$('ar-color').value});
+  $('ar-format').onchange=()=>applyAREdit({...arSnapshot(),format:$('ar-format').value});
+  $('ar-apply').onclick=()=>applyAREdit({...arSnapshot(),pattern:$('ar-pattern').value,joint:Number($('ar-joint').value),width:Number($('ar-width').value),height:Number($('ar-height').value),brick:Object.fromEntries(['x','y','z'].map(k=>[k,Number($('ar-brick-'+k).value)]))});
+  $('ar-undo').onclick=()=>{if(arHistory.length)applyAREdit(arHistory.at(-1),true);};
+  $('ar-launch').onclick=()=>{
+    const viewer=$('ar-viewer');
+    // Invoke from the tap itself when ready: native viewers require transient
+    // user activation, which a GLB/USDZ export can otherwise consume.
+    if(viewer.loaded&&(arWebXR||exportCache?.revision===revision))viewer.activateAR().catch(()=>arMessage('No se pudo abrir AR. Revisa los permisos y vuelve a intentarlo.'));
+    else startAR(true);
+  };
+  $('ar-editor-close').onclick=()=>{
+    if(arSessionActive||arEditBusy||arBusy)return;
+    arEditorOpen=false;const viewer=$('ar-viewer');viewer.classList.remove('editor-open');viewer.setAttribute('aria-hidden','true');viewer.tabIndex=-1;
+    viewer.removeAttribute('src');viewer.removeAttribute('ios-src');releaseRetiredARURLs();document.body.classList.remove('ar-editing');
+    for(const el of document.querySelectorAll('body > header,main,.ar-dock'))el.inert=false;
+    $('ar-button').focus();say('Diseño actualizado. Los cambios de AR se conservan en el estudio.');
+  };
+  // Prevent taps on the panel from also moving the placed model.
+  document.querySelector('.ar-editor').addEventListener('beforexrselect',e=>e.preventDefault());
+  $('ar-viewer').addEventListener('ar-status',e=>{
+    const status=e.detail.status;arSessionActive=status==='session-started'||status==='object-placed';
+    if(status==='session-started')arMessage('Busca una superficie y coloca el modelo. Puedes editarlo aquí.');
+    if(status==='object-placed')arMessage('Modelo colocado. Arrastra para moverlo; usa el panel para editar.');
+    if(status==='not-presenting')arMessage('Cambios guardados en el estudio. Puedes seguir editando o volver a AR.');
+    if(status==='failed')arMessage('No se pudo abrir AR. Puedes seguir editando en 3D y volver a intentarlo.');
+  });
+  $('ar-viewer').addEventListener('ar-tracking',e=>arMessage(e.detail.status==='not-tracking'?'Se perdió el seguimiento. Apunta a una superficie con textura y buena luz.':'Seguimiento recuperado. Puedes seguir editando.'));
+}
+async function getExport(){
+  if(cutPending)rebuild();
+  if(!hasGeometry())throw Error('El recorte no contiene geometría exportable.');
+  if(exportCache?.revision===revision)return exportCache;
+  if(exportJob){await exportJob;return getExport();}
+  const version=revision,snapshot=createExportSnapshot(mesh);
+  exportJob=(async()=>{
+    try{
+      // ONLY the final CSG mesh. Same positions/normals/UVs as the viewport.
+      const buffer=await new GLTFExporter().parseAsync(snapshot,{binary:true,onlyVisible:true});
+      if(version!==revision)throw Error('El diseño cambió durante la exportación. Vuelve a intentarlo.');
+      const blob=new Blob([buffer],{type:'model/gltf-binary'});
+      if(blob.size===0){console.log('[AR] GLTFExporter devolvió un Blob vacío.',{revision:version,vertices:snapshot.geometry.attributes.position.count});throw Error('El archivo AR está vacío. Vuelve a generar el contorno.');}
+      validateGLB(buffer);
+      const url=URL.createObjectURL(blob);
+      exportCache={revision:version,blob,url,arBlob:blob,arURL:url,iosURL:null};return exportCache;
+    }catch(error){console.error('[AR] Error al exportar la malla CSG:',error);throw error;}
+    finally{snapshot.geometry.dispose();snapshot.material.dispose();}
+  })();
+  try{return await exportJob;}finally{exportJob=null;}
+}
+async function download(){say('Exportando el modelo a escala real…');const result=await getExport();const a=document.createElement('a');a.href=result.url;a.download='ceramica-santiago-'+APP_STATE.mode+'.glb';document.body.append(a);a.click();a.remove();say('GLB exportado en metros con los bordes y la diagonal cortados físicamente.');}
+const isIOS=()=>/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+async function prepareIOS(result){
+  if(!isIOS()||result.iosURL)return;
+  // Quick Look receives the SAME final CSG solid, not the overbuilt wall.
+  const snapshot=createExportSnapshot(mesh);
+  try{
+    const {USDZExporter}=await import('three/addons/exporters/USDZExporter.js');
+    const bytes=await new USDZExporter().parseAsync(snapshot,{quickLookCompatible:true,ar:{anchoring:{type:'plane'},planeAnchoring:{alignment:APP_STATE.mode==='wall'?'vertical':'horizontal'}}});
+    if(result.revision!==revision)throw Error('El diseño cambió. Vuelve a abrir AR.');
+    result.iosURL=URL.createObjectURL(new Blob([bytes],{type:'model/vnd.usdz+zip'}));
+  }finally{snapshot.geometry.dispose();snapshot.material.dispose();}
+}
+function withTimeout(promise,ms,message){let timer;return Promise.race([promise,new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error(message)),ms);})]).finally(()=>clearTimeout(timer));}
+async function loadARSource(viewer,url){
+  viewer.style.display='block';
+  if(viewer.src===url&&viewer.loaded)return;
+  let timer,onLoad,onError;
+  try{await new Promise((resolve,reject)=>{onLoad=()=>resolve();onError=()=>reject(Error('El visor AR no pudo cargar el GLB.'));viewer.addEventListener('load',onLoad,{once:true});viewer.addEventListener('error',onError,{once:true});timer=setTimeout(()=>reject(Error('Se agotó el tiempo de carga del visor AR.')),30000);viewer.src=url;});}
+  finally{clearTimeout(timer);viewer.removeEventListener('load',onLoad);viewer.removeEventListener('error',onError);}
+}
+function showARHelp(message){$('ar-title').textContent='Tu diseño, a escala real';$('ar-message').textContent=message;$('ar-retry').hidden=!$('ar-viewer').canActivateAR;$('dialog-download').disabled=!hasGeometry();if(!$('ar-dialog').open)$('ar-dialog').showModal();}
+async function startAR(launch=false){
+  // onclick passes an Event, not an instruction to launch a native viewer.
+  launch=launch===true;
+  if(arBusy||arEditBusy||arSessionActive)return;arBusy=true;$('ar-button').disabled=true;$('ar-button').setAttribute('aria-busy','true');$('ar-label').textContent='Preparando tu diseño…';say('Exportando las piezas del contorno actual…');
+  if(!arEditorOpen){arEditorOpen=true;arHistory.length=0;const viewer=$('ar-viewer');viewer.classList.add('editor-open');viewer.removeAttribute('aria-hidden');viewer.tabIndex=0;document.body.classList.add('ar-editing');for(const el of document.querySelectorAll('body > header,main,.ar-dock'))el.inert=true;}
+  syncAREditor();arMessage('Preparando modelo editable…');
+  // Freeze configuration during preparation so geometry, dimensions and
+  // all URLs belong to one revision. Closing AR restores editing.
+  const locked=[...document.querySelectorAll('.panel button,.panel input,.panel select,.mode-bar button,.view-tools button,.canvas-nav button')].map(el=>[el,el.disabled]);locked.forEach(([el])=>el.disabled=true);$('pins').style.pointerEvents='none';$('pins').inert=true;
+  try{
+    const result=await getExport();await withTimeout(customElements.whenDefined('model-viewer'),20000,'No se pudo cargar model-viewer. Revisa la conexión CDN.');
+    arWebXR=await navigator.xr?.isSessionSupported('immersive-ar').catch(()=>false)||false;
+    if(!arWebXR)await prepareIOS(result);
+    const viewer=$('ar-viewer');viewer.setAttribute('ar-placement',APP_STATE.mode==='wall'?'wall':'floor');if(result.iosURL)viewer.setAttribute('ios-src',result.iosURL);
+    let source=result.arURL;
+    if(arWebXR)viewer.setAttribute('ar-modes','webxr'); // Never silently leave the editable session.
+    else if(CONFIG.publishGLB){source=await CONFIG.publishGLB(result.arBlob);if(!/^https:\/\//.test(source))throw Error('Scene Viewer requiere una URL HTTPS pública.');viewer.setAttribute('ar-modes','scene-viewer quick-look');}
+    else viewer.setAttribute('ar-modes','quick-look'); // no broken blob: intent to Scene Viewer
+    await loadARSource(viewer,source);
+    // Let Lit finish selecting the AR mode after loading/changing attributes.
+    await viewer.updateComplete;
+    $('ar-launch').textContent=arWebXR?'Entrar y editar en AR':'Ver en AR · visor externo';
+    arMessage(arWebXR?'Edita aquí o entra a AR: los controles seguirán disponibles sobre la cámara.':viewer.canActivateAR?'Puedes editar aquí. El visor externo muestra el diseño actualizado; para hacer otro cambio, vuelve a esta pantalla.':'Editor 3D disponible. Para editar sobre la cámara, abre esta página por HTTPS en un Android compatible con WebXR.');
+    releaseRetiredARURLs();
+    if(!launch||!viewer.canActivateAR){if(!launch)$('ar-color').focus();return;}
+    // Attempt automatic activation immediately after export and load.
+    // Some browsers expire user activation while awaiting GLB generation.
+    try{await viewer.activateAR();say('Solicitud AR enviada. Si no se abre, pulsa de nuevo el botón rojo.');}
+    catch{arMessage('No se pudo abrir AR. Comprueba los permisos de cámara y vuelve a pulsar el botón de AR.');}
+  }catch(e){say('No se pudo iniciar AR: '+e.message);arMessage(e.message);}
+  finally{arBusy=false;locked.forEach(([el,disabled])=>el.disabled=disabled);$('pins').style.pointerEvents='';$('pins').inert=false;$('ar-button').disabled=!hasGeometry();$('ar-button').setAttribute('aria-busy','false');$('ar-label').textContent='Editar y ver en AR (1:1)';syncAREditor();}
+}
+window.addEventListener('pagehide',e=>{if(!e.persisted){if(APP_STATE.photoURL)URL.revokeObjectURL(APP_STATE.photoURL);invalidateExport();}});
+// Explicit diagnostics permit tests of the SAME embedded implementation.
+window.SIMULATOR={CONFIG,APP_STATE,VIEW_STATE,worldToScreen,screenToPolygon,buildLayout,createCutWall,estimateUnits,polygonBounds,pointInPolygon,validPolygon,wallPolygon,corners,polygonArea,get mesh(){return mesh;},get layout(){return layout;},getExport};
+try{initialize();}catch(e){console.error(e);$('fatal').hidden=false;$('fatal').textContent='No se pudo iniciar WebGL: '+e.message;say('Comprueba WebGL y tu conexión; luego recarga la página.');}
+</script>
+</body>
+</html>
